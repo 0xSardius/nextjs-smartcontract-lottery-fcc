@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Header() {
+function ManualHeader() {
   return (
     <div>Hi From Header!</div>
   )

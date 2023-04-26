@@ -1,6 +1,7 @@
 import { useWeb3Contract, useMoralis } from "react-moralis";
 import { abi, contractAddresses } from "../constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
 export default function LotteryEntrance() {
   const { chainId: chainIdHex } = useMoralis();
@@ -8,13 +9,14 @@ export default function LotteryEntrance() {
   const chainId = parseInt(chainIdHex);
   const raffleAddress =
     chainIdHex in contractAddresses ? contractAddresses[chainId][0] : null;
-  //   const { runContractFunction: enterRaffle } = useWeb3Contract({
-  //     abi: abi,
-  //     contractAddress: raffleAddress,
-  //     functionName: "enterRaffle",
-  //     params: {},
-  //     msgValue:
-  //   });
+  const [entranceFee, setEntranceFee] = useState("0");
+  const { runContractFunction: enterRaffle } = useWeb3Contract({
+    abi: abi,
+    contractAddress: raffleAddress,
+    functionName: "enterRaffle",
+    params: {},
+    msgValue: entranceFee,
+  });
 
   const { runContractFunction: getEntranceFee } = useWeb3Contract({
     abi: abi,
@@ -25,14 +27,35 @@ export default function LotteryEntrance() {
 
   useEffect(() => {
     if (isWeb3Enabled) {
+      // try to read the raffle entrance fee
       async function updateUI() {
-        cons;
+        const entranceFeeFromCall = await getEntranceFee(
+          await getEntranceFee()
+        ).toString();
+        setEntranceFee(ethers.utils.formatUnits(entranceFeeFromCall, "ether"));
+        console.log(entranceFee);
       }
+      updateUI();
     }
   }, [isWeb3Enabled]);
+
   return (
     <div>
-      <h1>Lottery Entrance</h1>
+      gm Lottery Entrance!
+      {raffleAddress ? (
+        <div>
+          <button
+            onClick={async function () {
+              await enterRaffle();
+            }}
+          >
+            Enter Raffle
+          </button>
+          Entrance Fee: {ethers.utils.formatUints(entranceFee, "ether")} ETH
+        </div>
+      ) : (
+        <div>No Raffle Address Detected</div>
+      )}
     </div>
   );
 }

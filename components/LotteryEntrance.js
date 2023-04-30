@@ -82,11 +82,12 @@ export default function LotteryEntrance() {
   };
 
   return (
-    <div>
+    <div className="p-5">
       gm Lottery Entrance!
       {raffleAddress ? (
         <div>
           <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
             onClick={async function () {
               await enterRaffle({
                 onSuccess: handleSuccess,
